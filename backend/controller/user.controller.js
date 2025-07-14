@@ -46,6 +46,7 @@ const login = async (req, res) => {
         // Send the generated token as a JSON response
         res.json({ token });
     } catch (error) {
+        console.log(error)
         res.status(500).send('Login failed'); // Handle any unexpected errors
     }
 }
