@@ -20,3 +20,9 @@ const authenticateJWT = (req, res, next) => {
     });
 };
 
+const authorizeAdmin = (req, res, next) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).send('Access Forbidden: Admins only'); // Forbidden access for non-admin users
+    }
+    next();
+}
