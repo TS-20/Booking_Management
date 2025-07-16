@@ -4,8 +4,9 @@ const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
 const signUp = async (req, res) => {
+    console.log(req.body)
     const salt = await bcrypt.genSalt(10);
-    const { firstName, lastName, email, password, phone } = req.body;
+    const { firstName, lastName, email, password, phone, role } = req.body;
     try{
         const existingUser = await User.findOne({ email: email });
         if (existingUser) {
@@ -18,7 +19,9 @@ const signUp = async (req, res) => {
             lastName,
             email,
             password: hashedPassword,
-            phone
+            phone,
+            role : role || "user"
+
         });
         await newUser.save();
         res.status(201).json({ message: 'User created successfully' });
@@ -41,7 +44,8 @@ const login = async (req, res) => {
 
         // Generate a JWT token for the authenticated user
         const token = jwt.sign(
-            { userId : user._id , role:user.role ,
+            { userId : user._id , 
+                role:user.role ,
                 firstName: user.firstName
             },  // Payload (data inside the token)
             process.env.JWT_SECRET,      // Secret key for signing the token
